@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference android:summary="Username" android:key="USERNAME" android:title="Username"/>
+    <!--<EditTextPreference android:summary="Icon" android:key="ICON" android:title="Icon"/>-->
+    <ListPreference
+        android:key="ICON"
+        android:title="Title"
+        android:summary="Summary"
+        android:entries="@array/icons_array"
+        android:entryValues="@array/icons_array_value"></ListPreference>
+
+</PreferenceScreen>
