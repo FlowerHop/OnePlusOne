@@ -12,7 +12,7 @@
   <li>Server check the player list -> if the size of list >= 2 then pair with 2 players into a RoomSession and remove from the player list</li>
   <li>Server new RoomSession(Player A, Player B) and add to the RoomSession list
   <li>RoomSession.startSesssion() which involkes initilizeUI() to use playerA.sendMsg([player B's name]:[player B's icon]) and playerB.sendMsg([player A's name]:[player A's icon])</li> 
-  <li>RoomSession new thread to handle a runnable task called handlePlayersAnswers which create a new thread to listening on the score changing for each Player. If changing, called updateUI to use player.sendMsg([myScore]:[enemyScore]) to update the Android App's screen. At the same time, handlePlayersAnswers is listening on the game exit accident<li/>
+  <li>RoomSession new thread to handle a runnable task called handlePlayersAnswers which create a new thread to listening on the score changing for each Player. If changing, called updateUI to use player.sendMsg([myScore]:[enemyScore]) to update the Android App's screen. At the same time, handlePlayersAnswers is listening on the game exit accident</li>
   <li>In the battling time, the sockets of these two Player uses a thread called readMsg to receive the msg from the client(Player from the Android App). The format of msg is [operation]:[number]. Case 1: 0:70, 0 is code EXIT, and 70 is the final score; Case 2: 1:-3. 1 is code UPDATE, -3 is the changing of the score</li>
   <li>If handlePlayersAnswers get the exit accident, interrupt the two threads of listening on the score changings. Then, called endGame() to use Rank.insertElement(player's info and score)</li>
 </ol>
