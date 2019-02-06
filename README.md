@@ -5,7 +5,7 @@
 給定一段時間內，系統會自動產生四則運算式於遊戲畫面，挖空其中一個運算元或運算子，並在式子下方提供四個選項供玩家選擇，答對加分，答錯扣分，連續答題成功或失敗會有額外分數上的獎勵或懲罰。
 
 ## 雙人連線對戰機制
-### Server
+### Server (Java)
 <ol>
   <li>Player A initConnection(), and writeMsg(Player A's info: name, icon) to Server  </li>
   <li>Server new Player(socket, Play A's info), and add to the player list</li>
