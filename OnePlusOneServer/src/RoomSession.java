@@ -1,68 +1,102 @@
-
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class RoomSession {
+	public static final int EXIT = 0;
+	public static final int UPDATE = 1;
 	private final static int PLAYER_A = 0;
 	private final static int PLAYER_B = 1;
 	
     private Player[] players;
+	private BufferedWriter[] bws;
+	private BufferedReader[] brs;
     private boolean exit;
     
-    private Thread handlePlayersAnswers = new Thread(new Runnable(){
+    private Thread handleTwoPlayersMsg = new Thread(new Runnable() {
 
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			while (!players[PLAYER_A].isExit() && !players[PLAYER_B].isExit()) {
-				if (!players[PLAYER_A].isExit()) {
-					// bad smell
-					int changed = players[PLAYER_A].getChanged();
-					if (changed != 0) updateUI(changed, 0);
-				}
-				
-				if (!players[PLAYER_B].isExit()) {
-					int changed = players[PLAYER_B].getChanged();
-					if (changed != 0) updateUI(0, changed);
+			initializeUI();
+			while(!players[PLAYER_A].isExit() && !players[PLAYER_B].isExit()) {
+				for (int i = 0; i < players.length; i++) {
+					if (!players[i].isExit()) {
+						try {
+							String msg = brs[i].readLine();
+							String msgArray[] = msg.split(":");
+							
+							switch (Integer.parseInt(msgArray[0])) {
+							    case EXIT:
+									brs[i].close();
+									bws[i].close();
+							    	players[i].toExit();
+							    	break;
+							    case UPDATE:
+							    	players[i].addScore(Integer.parseInt(msgArray[1]));
+							    	updateUI();
+							    	break;
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+					}
 				}
 			}
 			
 			endGame();
 		}});
-	
 
-    public RoomSession(Player a, Player b) {
+    public RoomSession() {
     	players = new Player[2];
-    	players[PLAYER_A] = a;
-    	players[PLAYER_B] = b;
     	exit = false;
+    }
+    
+    public void register(Player player) throws IOException {
+    	for (int i = 0; i < players.length; i++) {
+    		if (players[i] == null) {
+    			players[i] = player;
+    			bws[i] = new BufferedWriter(new OutputStreamWriter(players[i].getSocket().getOutputStream()));
+        	    brs[i] = new BufferedReader(new InputStreamReader(players[i].getSocket().getInputStream()));
+    		}
+    	}
     }
     
     public void startSessions() {
     
     	// TODO initial
-    	handlePlayersAnswers.start();
     	initializeUI();
+    	handleTwoPlayersMsg.start();
     }
 
     public boolean isExit() {
     	return exit;
     }
     
-    private void updateUI(int changedA, int changedB){
-    	players[PLAYER_A].sendMsg(Integer.toString(changedA) + ":" + Integer.toString(changedB));
-    	players[PLAYER_B].sendMsg(Integer.toString(changedB) + ":" + Integer.toString(changedA));
+    private void updateUI(){
+    	sendMsgToPlayer(PLAYER_A, Integer.toString(players[PLAYER_A].getScore()) + ":" + Integer.toString(players[PLAYER_B].getScore()));
+    	sendMsgToPlayer(PLAYER_B, Integer.toString(players[PLAYER_B].getScore()) + ":" + Integer.toString(players[PLAYER_A].getScore()));
     }
     
     private void initializeUI(){
-    	players[PLAYER_A].sendMsg(players[PLAYER_B].getUserName() + ":" + players[PLAYER_B].getIcon());
-    	players[PLAYER_B].sendMsg(players[PLAYER_A].getUserName() + ":" + players[PLAYER_A].getIcon());
+    	sendMsgToPlayer(PLAYER_A, players[PLAYER_B].getUserName() + ":" + players[PLAYER_B].getIcon());
+    	sendMsgToPlayer(PLAYER_B, players[PLAYER_A].getUserName() + ":" + players[PLAYER_A].getIcon());
+    }
+    
+    private void sendMsgToPlayer(int playerID, String msg) {
+    	try {
+			bws[playerID].write(msg + "\n");
+			bws[playerID].flush();
+    	} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public void endGame() {
-//    	players[PLAYER_A].sendMsg("exit");
-//    	players[PLAYER_B].sendMsg("exit");
-//    	players[PLAYER_A].toExit();
-//    	players[PLAYER_B].toExit();
         Rank.insertElement(new RankElement(players[PLAYER_A].getUserName(), players[PLAYER_A].getIcon(), players[PLAYER_A].getScore()));
         Rank.insertElement(new RankElement(players[PLAYER_B].getUserName(), players[PLAYER_B].getIcon(), players[PLAYER_B].getScore()));
         

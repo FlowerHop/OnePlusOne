@@ -49,7 +49,10 @@ public class Server {
 						if (players.size() >= 2) {
 							Player a = players.remove(0);
 							Player b = players.remove(0);
-							RoomSession room = new RoomSession (a, b);
+							
+							RoomSession room = new RoomSession();
+							a.setRoomSession(room);
+							b.setRoomSession(room);
 							Thread.sleep(3000);
 							room.startSessions();
 							rooms.add(room);
