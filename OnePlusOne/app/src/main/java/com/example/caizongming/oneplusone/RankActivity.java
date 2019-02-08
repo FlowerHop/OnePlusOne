@@ -3,7 +3,7 @@ package com.example.caizongming.oneplusone;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,7 +21,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 
-public class RankActivity extends ActionBarActivity {
+public class RankActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
