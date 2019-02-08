@@ -63,7 +63,8 @@ public class RankActivity extends AppCompatActivity {
     public static class RankFragment extends Fragment {
 
         private final static int PORT = 12345;
-        private final static String IP = "140.115.205.68";
+//        private final static String IP = "140.115.205.68";
+        private final static String IP = "101.14.207.129";
         private String msg;
         private Handler UIHandler;
         private Socket socket;

@@ -67,7 +67,8 @@ public class PvPActivity extends AppCompatActivity {
     public static class PvPFragment extends Fragment {
         private final static String TAG = "PvPActivity";
         private final static int PORT = 12345;
-        private final static String IP = "140.115.205.68";
+//        private final static String IP = "140.115.205.68";
+        private final static String IP = "101.14.207.129";
         private static String username;
         private static int icon;
 
@@ -259,6 +260,7 @@ public class PvPActivity extends AppCompatActivity {
             try {
                 bw.write(msg + "\n");
                 bw.flush();
+                Log.e("send", "send");
             } catch (IOException e) {
                 e.printStackTrace();
             }
