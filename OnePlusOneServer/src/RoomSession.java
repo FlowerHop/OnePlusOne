@@ -8,84 +8,49 @@ public class RoomSession {
     private Player[] players;
     private boolean exit;
     
+    private Thread handlePlayersAnswers = new Thread(new Runnable(){
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			while (!players[PLAYER_A].isExit() && !players[PLAYER_B].isExit()) {
+				if (!players[PLAYER_A].isExit()) {
+					// bad smell
+					int changed = players[PLAYER_A].getChanged();
+					if (changed != 0) updateUI(changed, 0);
+				}
+				
+				if (!players[PLAYER_B].isExit()) {
+					int changed = players[PLAYER_B].getChanged();
+					if (changed != 0) updateUI(0, changed);
+				}
+			}
+			
+			endGame();
+		}});
+	
+
     public RoomSession(Player a, Player b) {
     	players = new Player[2];
     	players[PLAYER_A] = a;
     	players[PLAYER_B] = b;
     	exit = false;
-    	
-    	
     }
     
     public void startSessions() {
-    	
+    
     	// TODO initial
-    	
-    	Thread t = new Thread(handlePlayersAnswers);
-    	t.start();
+    	handlePlayersAnswers.start();
     	initializeUI();
     }
-    
-    private Runnable handlePlayersAnswers = new Runnable() {
-        
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			Thread playerA = new Thread(new Runnable(){
 
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					while (!players[PLAYER_A].isExit()) {
-						int changed = players[PLAYER_A].getChanged();
-						if (changed != 0) updateUI(changed, 0);
-					}
-				}});
-			
-			Thread playerB = new Thread(new Runnable(){
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					while (!players[PLAYER_B].isExit()) {
-						int changed = players[PLAYER_B].getChanged();
-						if (changed != 0) updateUI(0, changed);
-					}
-				}});
-			
-			playerA.start();
-			playerB.start();
-			
-			while(true) {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if (players[PLAYER_A].isExit() && players[PLAYER_B].isExit()) {
-					break;
-				}
-			}
-			
-			playerA.interrupt();
-			playerB.interrupt();
-			endGame();
-		}
-    	
-    };
-    
     public boolean isExit() {
     	return exit;
     }
     
-    
-    
     private void updateUI(int changedA, int changedB){
-    	
     	players[PLAYER_A].sendMsg(Integer.toString(changedA) + ":" + Integer.toString(changedB));
     	players[PLAYER_B].sendMsg(Integer.toString(changedB) + ":" + Integer.toString(changedA));
-    	
     }
     
     private void initializeUI(){
@@ -103,6 +68,4 @@ public class RoomSession {
         
     	exit = true;
     }
-    
-    
 }

@@ -39,6 +39,7 @@ public class Server {
 						bw.close();
 						socket.close();
 					} else {
+						// playerInfoArray[0]: name, playerInfoArray[1]: icon
 						Player player = new Player(socket, playerInfoArray[0], Integer.parseInt(playerInfoArray[1]));
 						players.add(player);
 						
