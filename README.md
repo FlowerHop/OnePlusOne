@@ -18,8 +18,6 @@
 
 ### Client
 <ol>
-  <li>When user gets into PvPActivity, start waitingDialog to wait for the new enemy.</li>
-  <li>Thread initConnection starts. It creates a Socket(IP, PORT) and send the [username]:[icon] to the server, and starts two thread, receiveMsg and loadingUI. The thread loadingUI invokes initGame() to assign a runnable obj which init the UI components to UI handler and starts new thread called timerCount to interrupt the watingDialog and listen on the game time.</li>
+  <li>When user gets into PvPActivity, thread initConnection starts. It creates a Socket(IP, PORT) and send the [username]:[icon] to the server, and starts two thread, receiveMsg and timeCounter. The thread timeCounter dismiss the dialog and set button clickable after wating for 3 seconds then tracking the game time. Call endGame() to send msg 0:Score to the server if time's up.</li>
   <li>In the battling time, user can click the four options(buttons) below the question. It trigger the function checkAnswer which sends msg(changed score) to the server. And, thread receiveMsg is listening on the total scores info from the server.</li>
-  <li>If time's up, timerCounter call endGame() to send msg 0:Score to the server.</li>
 </ol>
