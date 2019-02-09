@@ -104,7 +104,7 @@ public class GameActivity extends AppCompatActivity {
 
             progressDialog = dialogBuilder.show();
 
-            waitingDialog.start();
+            // waitingDialog.start();
 
             img_user_icon = (ImageView) rootView.findViewById(R.id.img_user_icon);
             txt_user_name = (TextView) rootView.findViewById(R.id.txt_user_name);
@@ -133,8 +133,8 @@ public class GameActivity extends AppCompatActivity {
             for (TextView tx : selection) {
                 tx.setClickable(false);
             }
-            //initGame();
-            loadingUI.start();
+            initGame();
+            timerCount.start();
             return rootView;
         }
 
@@ -256,7 +256,8 @@ public class GameActivity extends AppCompatActivity {
                             for (TextView tx : selection) {
                                 tx.setClickable(true);
                             }
-                            waitingDialog.interrupt();
+                            //waitingDialog.interrupt();
+                            progressDialog.dismiss();
 
                         }
                     });
@@ -310,9 +311,6 @@ public class GameActivity extends AppCompatActivity {
 
         private Thread policyTimeCount = new Thread (policyTimeCountTask);
 
-
-
-
         @Override
         public void onPause() {
             //time = 0;
@@ -365,35 +363,6 @@ public class GameActivity extends AppCompatActivity {
         private void stopGame() {
             policyTimeCount.interrupt();
             timerCount.interrupt();
-            loadingUI.interrupt();
         }
-
-        private Thread waitingDialog = new Thread(new Runnable(){
-            @Override
-            public void run() {
-
-                try {
-                    while(true) {
-                        Thread.sleep(10000);
-                    }
-                } catch (InterruptedException e) {
-                    progressDialog.dismiss();
-                }
-            }
-        });
-
-        private Thread loadingUI = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        initGame();
-                        timerCount.start();
-
-                    }
-                });
-            }
-        });
     }
 }

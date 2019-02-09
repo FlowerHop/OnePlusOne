@@ -152,7 +152,6 @@ public class PvPActivity extends AppCompatActivity {
 
             progressDialog = dialogBuilder.show();
             // todo waitingDialog.start();
-            waitingDialog.start();
 
 
             // find view
@@ -190,7 +189,7 @@ public class PvPActivity extends AppCompatActivity {
             }
             // check network
             initConnection.start();
-            // todo if connection succeful
+            // todo if connection successful
 
 
             return rootView;
@@ -217,7 +216,8 @@ public class PvPActivity extends AppCompatActivity {
                     enemyIcon = Integer.parseInt(enemyArray[1]);
 
                     receiveMsg.start();
-                    loadingUI.start();
+                    initGame();
+                    timerCount.start();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -397,7 +397,7 @@ public class PvPActivity extends AppCompatActivity {
                             for (TextView tx : selection) {
                                 tx.setClickable(true);
                             }
-                            waitingDialog.interrupt();
+                            progressDialog.dismiss();
 
                         }
                     });
@@ -450,7 +450,6 @@ public class PvPActivity extends AppCompatActivity {
         private void stopGame() {
             policyTimeCount.interrupt();
             timerCount.interrupt();
-            loadingUI.interrupt();
             initConnection.interrupt();
         }
 
@@ -480,36 +479,6 @@ public class PvPActivity extends AppCompatActivity {
         };
 
         private Thread policyTimeCount = new Thread (policyTimeCountTask);
-
-
-
-        private Thread waitingDialog = new Thread(new Runnable(){
-            @Override
-            public void run() {
-
-                try {
-                    while(true) {
-                        Thread.sleep(10000);
-                    }
-                } catch (InterruptedException e) {
-                    progressDialog.dismiss();
-                }
-            }
-        });
-
-        private Thread loadingUI = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                UIHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        initGame();
-                        timerCount.start();
-
-                    }
-                });
-            }
-        });
 
 
 
