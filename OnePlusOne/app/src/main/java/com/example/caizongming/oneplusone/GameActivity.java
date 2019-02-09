@@ -181,58 +181,31 @@ public class GameActivity extends AppCompatActivity {
         }
 
         private void initQuestion() {
-            Equation equation = QuestionBuilder.build();
-            String answer  = QuestionBuilder.getAnswer();
-            int emptyPosition = QuestionBuilder.getEmptyPosition();
+            Question question = Question.build();
+            Equation equation = question.getEquation();
+            int emptyPosition = question.getEmptyPosition();
 
             System.out.println("Equation: " + equation.toString());
-            System.out.println("Answer: " + QuestionBuilder.getAnswer());
+            System.out.println("Answer: " + question.getAnswer());
+
+
+
 
             img_question[0].setText(equation.getNumberA());
-            img_question[1].setText( (equation.getOperation() == 0) ?  "+" :
-                    (equation.getOperation() == 1) ? "-" : "x");
+            img_question[1].setText( (equation.getOperation() == Equation.OPERATION_ADD) ?  "+" :
+                    (equation.getOperation() == Equation.OPERATION_SUB) ? "-" : "x");
             img_question[2].setText(equation.getNumberB());
             img_question[3].setText("=");
             img_question[4].setText(equation.getResult());
 
             img_question[emptyPosition].setText("_");
 
-            answerPosition = QuestionBuilder.randomNumbers(0, 3);
+            answerPosition = question.getAnswerPosition();
+            String[] ops = question.getOptions();
 
-
-
-            ArrayList<String> tempSelection = new ArrayList<String>();
-            for (int i = 0; i < 13; i++) {
-                String s;
-                if (i == 10) {
-                    s = "+";
-                } else if (i == 11) {
-                    s = "-";
-                } else if (i == 12) {
-                    s = "x";
-                } else {
-                    s = Integer.toString(i);
-                }
-
-                if (!s.equals(answer)) {
-                    tempSelection.add(s);
-                }
+            for (int i = 0; i < Question.OPTIONS_NUMBER; i++) {
+                selection[i].setText(ops[i]);
             }
-
-            for (int i = 0; i < 4; i++) {
-                if (i == answerPosition) {
-                    selection[i].setText(answer);
-                } else {
-                    int random = QuestionBuilder.randomNumbers(0, tempSelection.size() - 1);
-                    selection[i].setText(tempSelection.remove(random));
-                }
-            }
-
-
-
-
-
-
         }
 
 
